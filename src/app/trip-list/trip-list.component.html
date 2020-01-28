@@ -1,0 +1,112 @@
+<div class="root__container">
+<mat-card class="header-container zero-border">
+  <mat-card-title>My trips</mat-card-title>
+  <button mat-mini-fab class="plus_button" (click)="redirectToCreateTrip()" [disabled]="isDisabled()">
+    <i class="material-icons">add</i>
+  </button>
+</mat-card>
+<mat-card class="list-container zero-border">
+  <mat-table [dataSource]="tripsDataSource">
+    <ng-container matColumnDef="admin" class="sibling">
+      <mat-header-cell *matHeaderCellDef> Admin </mat-header-cell>
+      <mat-cell *matCellDef="let trip"> 
+        <div *ngIf="isCurrentUserAdmin(trip.admin);else other_content">
+          <i class="material-icons">star</i>
+        </div>
+        <ng-template #other_content>{{trip.admin}}</ng-template>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+      <mat-cell *matCellDef="let trip"> {{trip.name}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="participants">
+      <mat-header-cell *matHeaderCellDef> Participants </mat-header-cell>
+      <mat-cell *matCellDef="let trip"> {{trip.participants}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
+      <mat-cell *matCellDef="let trip">
+        <div *ngIf="isUneditable(trip.id);else editStatus">{{trip.status}}</div>
+        <ng-template #editStatus>
+          <mat-form-field class="status-field">
+            <select (click)="$event.stopPropagation()"  matNativeControl required [formControl]="status">
+              <option value="{{trip.status}}">{{trip.status}}</option>
+              <option value="{{getOtherStatus(trip.status)}}">{{getOtherStatus(trip.status)}}</option>
+            </select>
+          </mat-form-field>
+        </ng-template>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="start_date">
+      <mat-header-cell *matHeaderCellDef> Start Date </mat-header-cell>
+      <mat-cell *matCellDef="let trip">
+        <div *ngIf="isUneditable(trip.id);else other_content">{{trip.start_date}}</div>
+        <ng-template #other_content>
+          <mat-form-field class="date-field">
+            <input matInput [matDatepicker]="picker3" [min] ="today" [formControl]="startDate">
+            <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+            <mat-datepicker #picker3 ></mat-datepicker>
+          </mat-form-field>
+        </ng-template>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="end_date">
+      <mat-header-cell *matHeaderCellDef> End Date </mat-header-cell>
+      <mat-cell *matCellDef="let trip">
+        <div *ngIf="isUneditable(trip.id);else other_content">{{trip.end_date}}</div>
+        <ng-template #other_content>
+          <mat-form-field class="date-field">
+            <input matInput [matDatepicker]="picker4" [min] = "startDate.value" [formControl]="endDate">
+            <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
+            <mat-datepicker #picker4></mat-datepicker>
+          </mat-form-field>
+        </ng-template>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="action">
+      <mat-header-cell *matHeaderCellDef></mat-header-cell>
+      <mat-cell *matCellDef="let trip">
+        <div *ngIf="trip.admin == '*'">
+          <div *ngIf="isAvailableToEdit(trip.id)">
+            <div *ngIf="isUneditable(trip.id);else other_content">
+              <button class='inner-button' mat-icon-button matSuffix (click)="handleElement(trip);$event.stopPropagation()">
+                <mat-icon>create</mat-icon>
+              </button>
+            </div>
+            <ng-template #other_content>
+              <button mat-icon-button matSuffix (click)="trip=commitChanges(trip);$event.stopPropagation()">
+                <mat-icon>done</mat-icon>
+              </button>
+              <button mat-icon-button matSuffix (click)="cancelChanges(trip.id);$event.stopPropagation()">
+                <mat-icon>clear</mat-icon>
+              </button>
+            </ng-template>
+          </div>
+        </div>
+    </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="left">
+      <mat-header-cell *matHeaderCellDef></mat-header-cell>
+      <mat-cell *matCellDef="let trip">
+        <div *ngIf="!isCurrentUserAdmin(trip.admin) ">
+          <button mat-icon-button matSuffix (click)="leftTrip(trip);$event.stopPropagation()" > <mat-icon>exit_to_app</mat-icon></button>
+        </div>
+        <div *ngIf="trip.participants==1  && isCurrentUserAdmin(trip.admin) ">
+          <button mat-icon-button matSuffix (click)="leftTrip(trip);$event.stopPropagation()" > <mat-icon>delete</mat-icon></button>
+        </div>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row [className]="current_editable == null ? 'active-row' : 'disabled-row'" (click)="current_editable == null ? redirectToTripDetail(row.id) : null" *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+</mat-card>
+</div>

@@ -1,0 +1,137 @@
+
+  <mat-card class="input-card">
+    <div *ngIf="personalInventory === userService.getUserId() || personalInventory === 0">
+      <mat-form-field class="tag-width">
+        <mat-label>Tag</mat-label>
+        <mat-select *ngIf="!personalInventory" [formControl]="tagName" [(ngModel)]="tag">
+          <mat-option *ngFor="let role of userTripRoles" [style.background-color]="role.color" [value]="role.id">
+            {{role.name}}
+          </mat-option>
+        </mat-select>
+        <select *ngIf="personalInventory" matNativeControl required>
+          <option value="personal">Personal</option>
+        </select>
+        <mat-error *ngIf="tagName.invalid">{{ getTagErrorMessage() }}</mat-error>
+      </mat-form-field>
+      <mat-form-field class="item-name-width">
+        <input matInput type="text" placeholder="Item name" [formControl]="itemName" [(ngModel)]="name">
+        <mat-error *ngIf="itemName.invalid">{{ getNameErrorMessage() }}</mat-error>
+        <button mat-button *ngIf="name" matSuffix mat-icon-button aria-label="Clear" (click)="name=''">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+      <mat-form-field class="example-margin">
+        <input matInput type="number" placeholder="kg" [formControl]="itemWeight" [(ngModel)]="weight">
+        <mat-error *ngIf="itemWeight.invalid">{{ getWeightErrorMessage() }}</mat-error>
+      </mat-form-field>
+      <mat-form-field class="example-margin">
+        <input matInput type="number" placeholder="units" [formControl]="itemQuantity" [(ngModel)]="quantity">
+        <mat-error *ngIf="itemQuantity.invalid">{{ getQuantityErrorMessage() }}</mat-error>
+      </mat-form-field>
+      <button mat-mini-fab (click)="addItem()" [disabled]="inputDataInvalid()">
+        <i class="material-icons">add</i>
+      </button>
+    </div>
+  </mat-card>
+
+
+    <table mat-table [dataSource]="itemsDataSource" matSort class="mat-elevation-z4">
+      <ng-container matColumnDef="tag">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Tag </th>
+          <td mat-cell *matCellDef="let item">
+            <div *ngIf="isNotInEditMode(item.equipment_id); else tag_editing">
+              <mat-chip class="role-color" [style.background-color]="item.role_color"></mat-chip>
+            </div>
+            <ng-template #tag_editing>
+              <mat-form-field class="edit-field edit-tag-width">
+                <mat-select [(ngModel)]="edited_tag">
+                  <mat-option *ngFor="let role of userTripRoles" [style.background-color]="role.color" [value]="role.id">
+                    {{role.name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </ng-template>
+          </td>
+      </ng-container>
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+        <td mat-cell *matCellDef="let item">
+          <div *ngIf="isNotInEditMode(item.equipment_id); else name_editing">{{item.name}}</div>
+          <ng-template #name_editing>
+            <mat-form-field class="edit-field edit-item-name-width">
+              <input matInput type="text" [formControl]="itemNameEdit" [(ngModel)]="edited_name">
+              <mat-error *ngIf="itemNameEdit.invalid">{{ getNameEditErrorMessage() }}</mat-error>
+            </mat-form-field>
+          </ng-template>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="weight">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Weight </th>
+        <td mat-cell *matCellDef="let item">
+          <div *ngIf="isNotInEditMode(item.equipment_id); else weight_editing">{{item.weight}}</div>
+        </td>
+        <ng-template #weight_editing>
+          <mat-form-field class="edit-field edit-example-margin">
+            <input matInput type="number" [formControl]="itemWeightEdit" [(ngModel)]="edited_weight">
+            <mat-error *ngIf="itemWeightEdit.invalid">{{ getWeightEditErrorMessage() }}</mat-error>
+          </mat-form-field>
+        </ng-template>
+      </ng-container>
+      <ng-container matColumnDef="quantity">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantity </th>
+        <td mat-cell *matCellDef="let item">
+          <div *ngIf="personalInventory !== 0 && isNotInEditMode(item.equipment_id); else general">{{item.quantity}}</div>
+          <ng-template #general>
+            <div *ngIf="isNotInEditMode(item.equipment_id); else quantity_field">{{getDispensedItemAmount(item.equipment_id)}}/{{item.quantity}}</div>
+          </ng-template>
+          <ng-template #quantity_field>
+            <mat-form-field class="edit-field edit-example-margin">
+              <input matInput type="number" [class.quantity-warning]="dispensed_item_amount > edited_quantity" [formControl]="itemQuantityEdit" [(ngModel)]="edited_quantity">
+              <mat-error *ngIf="itemQuantityEdit.invalid">{{ getQuantityEditErrorMessage() }}</mat-error>
+            </mat-form-field>
+          </ng-template>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="buttons">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let item">
+          <div class="item-buttons" *ngIf="isItemSelected(item.equipment_id)">
+            <button mat-icon-button matSuffix (click)="commitChanges(item);$event.stopPropagation()">
+              <mat-icon>done</mat-icon>
+            </button>
+            <button mat-icon-button matSuffix (click)="cancelChanges();$event.stopPropagation()">
+              <mat-icon>clear</mat-icon>
+            </button>
+          </div>
+          <div class="item-buttons" *ngIf="(isUserWithTag(item.role_id) && isAnySelected() && !personalInventory) || item.owner_id; else without_tag">
+            <div *ngIf="isNotInEditMode(item.equipment_id); else edit_mode" (click)=startEditMode(item)>
+              <button mat-icon-button>
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button (click)="openDeleteDialog(item);$event.stopPropagation()">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+        </td>
+      </ng-container>
+      <ng-template #without_tag></ng-template>
+      <ng-template #edit_mode>
+        <button mat-icon-button (click)="submitChanges();$event.stopPropagation()" [disabled]="editDataInvalid() || dispensedItemValidatorInvalid()">
+          <mat-icon>done</mat-icon>
+        </button>
+        <button mat-icon-button (click)="endEditMode();$event.stopPropagation()">
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </ng-template>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="cancelChanges();selectItem(row)"></tr>
+
+      <ng-container matColumnDef="groupHeader">
+        <td colspan="999" mat-cell *matCellDef="let group" [style.background-color]="group.role_color"></td>
+      </ng-container>
+
+      <tr mat-row class="tag-color-line" *matRowDef="let row; columns: ['groupHeader']; when: isGroup"></tr>
+    </table>
+

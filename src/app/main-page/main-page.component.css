@@ -1,0 +1,18 @@
+.root__container {
+    width: 100vw;
+    height: 100vh;
+    background-image: url(../../assets/images/trip_background.jpg);
+    background-size: cover;
+    position: fixed;
+}
+
+.wrapper-main .mdc-button.mdc-button--unelevated {
+    position: absolute;
+    bottom: 10%;
+    right: 5%;
+    height: 70px;
+    width: 230px;
+    font-size: 1.3rem;
+    background-color: #5090ce;
+    /*left: 50%;*/
+}

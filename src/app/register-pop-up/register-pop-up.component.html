@@ -1,0 +1,33 @@
+<div [hidden]="!submitted">
+  <h2 align="center">Check your email for confirmation.</h2>
+</div>
+
+<div [hidden]="submitted">
+  <h1 mat-dialog-title align="center">Sign Up</h1>
+  <div mat-dialog-content class="form-container">
+    <mat-form-field>
+      <input placeholder="Name" matInput [formControl]="name" [(ngModel)]="data.name" required>
+      <mat-error *ngIf="name.invalid">{{ getNameErrorMessage() }}</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input placeholder="Surname" matInput [formControl]="surname" [(ngModel)]="data.surname">
+      <mat-error *ngIf="surname.invalid">{{ getSurnameErrorMessage() }}</mat-error>
+    </mat-form-field><br>
+    <mat-form-field>
+      <input placeholder="Email" matInput [formControl]="email" [(ngModel)]="data.email" required>
+      <mat-error *ngIf="email.invalid">{{ getEmailErrorMessage() }}</mat-error>
+    </mat-form-field><br>
+    <mat-form-field>
+      <input placeholder="Password" matInput [formControl]="password" [(ngModel)]="data.password" [type]="passwordHide ? 'password' : 'text'" required>
+      <mat-error *ngIf="password.invalid">{{ getPasswordErrorMessage() }}</mat-error>
+      <button mat-icon-button matSuffix (click)="passwordHide = !passwordHide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="passwordHide">
+        <mat-icon>{{passwordHide ? 'visibility_off' : 'visibility'}}</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+  <mat-dialog-actions align="center">
+    <button mat-raised-button class="register" (click)="sendCredentials()" [disabled]="dataInvalid()">Register</button>
+    <button mat-raised-button class="cancel" mat-dialog-close>Cancel</button>
+  </mat-dialog-actions>  
+</div>
+

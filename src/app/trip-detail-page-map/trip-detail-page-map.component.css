@@ -1,0 +1,47 @@
+.mat-list {
+    margin-left: 40px;
+    margin-right: 20px;
+    max-height: 280px;
+    overflow: auto;
+}
+
+agm-map{
+    height:300px;
+    width: 100%;
+}
+
+#container {
+    height:100%;
+    width: 100%;
+}
+
+#left1 {
+    float:left;
+    height:300px;
+    width: 250px;
+}
+
+#right1 {
+    float:right;
+    height:100%;
+    margin-right: 30px;
+    width: calc(100% - 280px);
+}
+
+.list-container {
+
+    max-height: 80%;
+    margin-left: 15px;
+    overflow: auto;
+}
+
+.list-container .mat-list-item {
+
+    margin-top: -1px;
+    height: 70px;
+}
+
+.list-container .mat-list-item .mat-line {
+    padding-top: 0px;
+    padding-bottom: 0px;
+}

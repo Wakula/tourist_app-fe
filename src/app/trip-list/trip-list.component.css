@@ -1,0 +1,51 @@
+.new-trip:disabled {
+    background-color: rgb(78, 75, 75);
+}
+.list-container {
+    position: relative;
+    top: 80px;
+    width: 70vw;
+    margin: auto;
+}
+.header-container {
+    background-color: #fafafa;
+    top: 80px;
+    width: 70vw;
+    margin: auto;
+
+    display: flex;
+    justify-content: space-between;
+}
+.mat-mini-fab {
+    background-color: #009c75;
+    color: white;
+}
+.date-field {
+    width: 60%;
+}
+.status-field {
+    float: left;
+    width: 50%;
+}
+.active-row {
+    height: 5vh;
+}
+.active-row:hover {
+    background-color: #969797e7;
+}
+.active-row:active {
+    background-color: white;   
+}
+
+
+.root__container {
+    width: 100vw;
+    height: 100vh;
+    background-image: url(../../assets/images/tent_sunset.png);
+    background-size: cover;
+    position: fixed;
+}
+
+.plus_button{
+    background-color: #79c1e5;
+}

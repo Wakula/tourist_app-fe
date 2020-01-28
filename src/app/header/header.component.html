@@ -1,0 +1,25 @@
+<mat-toolbar color="primary" class="mdc-top-app-bar">
+  <mat-toolbar-row>
+    <span>
+      <button class="mdc-icon-button material-icons mdc-top-app-bar__navigation-icon--unbounded" (click)="closeProfile()" [routerLink]="['/index']">
+        <i class="material-icons">landscape</i>
+      </button>
+      <span class="mdc-top-app-bar__title">Tourist App</span>
+    </span>
+    <span class="example-spacer"></span>
+    <div *ngIf="!userIsAuthorized()" class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end">
+      <button mat-raised-button class="mdc-button mdc-button--unelevated" type="submit" (click)="openSignInDialog()">Sign In</button>
+      <button mat-raised-button class="mdc-button mdc-button--unelevated" (click)="openSignUpDialog()">Sign Up</button>
+    </div>
+    <div *ngIf="userIsAuthorized();">
+      <button mat-stroked-button class="my-trips-button" (click)="closeProfile()" [routerLink]="['/trip-list']">
+        My Trips
+      </button>
+      <button (click)="clickToggle()" class="mdc-icon-button material-icons mdc-top-app-bar__navigation-icon--unbounded">
+        <i class="material-icons">account_circle</i>
+      </button>
+      <strong>{{user.name}} {{user.surname}}</strong>
+    </div>
+  </mat-toolbar-row>
+</mat-toolbar>
+<app-user-profile></app-user-profile>

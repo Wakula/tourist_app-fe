@@ -1,0 +1,16 @@
+.inner-footer-1 {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+}
+
+.copyright__text {
+  letter-spacing: 0.1rem;
+  color: rgb(255, 255, 255);
+  font-family: Roboto, serif;
+}
+
+.inner-footer-2 {
+    position: relative;
+    left: -50%;
+}

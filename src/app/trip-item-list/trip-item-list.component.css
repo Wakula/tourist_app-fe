@@ -1,0 +1,63 @@
+.input-card {
+  height: 65px;
+  padding-top: 0px;
+  margin-bottom: 0px;
+  border-radius: 0px !important;
+}
+.item-name-width {
+  width: 30%;
+  padding: 0px;
+  margin: 0px;
+  margin-left: 10px;
+}
+.edit-field {
+  height: 70px;
+}
+.edit-item-name-width {
+  width: 70px;
+  padding: 0px;
+  margin: 0px;
+  margin-left: 10px;
+}
+.tag-width {
+  width: 20%;
+}
+.edit-tag-width {
+  width: 60px;
+}
+.example-margin {
+  margin-left: 10px;
+  width: 15%;
+}
+.edit-example-margin {
+  margin-left: 10px;
+  width: 50px;
+}
+button.mat-mini-fab {
+  background-color: green;
+  color: white;
+  margin-left: 10px;
+}
+table {
+  width: 100%;
+}
+th {
+  background-color: #79c1e5;
+  color: white;
+}
+
+.role-color {
+  width: 33px;
+}
+.tag-color-line {
+  height: 5px !important;
+}
+.item-buttons {
+  float: right;
+}
+.mat-row:hover {
+  background-color: lightgray;
+}
+.quantity-warning {
+  color: red;
+}

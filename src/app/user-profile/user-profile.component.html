@@ -1,0 +1,140 @@
+<div class="user-profile_container">
+    <mat-sidenav-container>
+        <mat-sidenav #sidenav mode="side" position="end">
+            <mat-list class="user-information">
+                <div *ngIf="this.editable; else staticAvatar">
+                    <mat-list-item  class="avatar-container">
+                        {{user.email}}
+                        <input type="file" name="image" style="display: none;" id="selectedFile"   (change)="fileProgress($event)" />
+                        <ngx-avatar class="my-avatar" size="70" src="{{previewUrl}}"></ngx-avatar>
+                        <button mat-icon-button class="mdc-button edit_avatar" onclick="document.getElementById('selectedFile').click();"><mat-icon>edit</mat-icon></button>
+                    </mat-list-item>
+                </div>
+                <ng-template #staticAvatar>
+                    <mat-list-item class="avatar-container">
+                        {{user.email}}
+                        <ngx-avatar class="my-avatar" size="70" src="{{user.avatar}}"></ngx-avatar>
+                    </mat-list-item>
+                </ng-template>
+                <div *ngIf="this.editable;else logout">
+                    <mat-list-item>
+                        <button mat-raised-button class="react" (click)="CancelEdit()">Cancel changes</button>
+                    </mat-list-item>
+                </div>
+                <ng-template #logout>
+                    <mat-list-item>
+                        <button mat-raised-button name="logout" (click)="logoutUser()"
+                                class="mdc-button mdc-button--unelevated">Logout</button>
+                    </mat-list-item>
+                </ng-template>
+
+                <div *ngIf="this.editable;else staticValue">
+                    <mat-form-field mat-line class="input-edit">
+                        <input matInput placeholder="Name"
+                               [(ngModel)]="editedUser.name"
+                               [formControl]="nameFormControl" (input)="checkUserData()"
+                               (keypress)="letterOnly($event)" type="text"/>
+                        <mat-error *ngIf="nameFormControl.hasError('minlength')">
+                            Minimum name length is 2.
+                        </mat-error>
+                        <mat-error *ngIf="nameFormControl.hasError('maxlength')">
+                            Maximum name length is 30.
+                        </mat-error>
+                        <mat-error *ngIf="nameFormControl.hasError('required')">
+                            Name is <strong>required</strong>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <ng-template #staticValue>
+                    <mat-list-item>Name: {{user.name}}</mat-list-item>
+                </ng-template>
+
+                <div *ngIf="this.editable;else surname">
+                    <mat-form-field mat-line class="input-edit">
+                        <input matInput placeholder="Surname"
+                               [(ngModel)]="editedUser.surname"
+                               (keypress)="letterOnly($event)" type="text"
+                               [formControl]="surnameFormControl" (input)="checkUserData()"/>
+                        <mat-error *ngIf="surnameFormControl.hasError('minlength')">
+                            Minimum surname length is 2.
+                        </mat-error>
+                        <mat-error *ngIf="surnameFormControl.hasError('maxlength')">
+                            Maximum surname length is 30.
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <ng-template #surname>
+                    <mat-list-item *ngIf="user.surname">Surname: {{user.surname}}</mat-list-item>
+                </ng-template>
+
+                <div *ngIf="this.editable; else capacity">
+                    <mat-form-field mat-line class="input-edit">
+                        <input placeholder="Capacity"
+                               (keypress)="numberOnly($event)" type="text"
+                               [(ngModel)]="editedUser.capacity" matInput [formControl]="capacityControl"
+                               (input)="checkUserData()"/>
+                        <mat-error *ngIf="capacityControl.hasError('min')">
+                            Minimum capacity is 1 kg.
+                        </mat-error>
+                        <mat-error *ngIf="capacityControl.hasError('max')">
+                            Maximum capacity is 40 kg.
+                        </mat-error>
+                        <mat-error *ngIf="capacityControl.hasError('required')">
+                            Capacity is <strong>required</strong>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <ng-template #capacity>
+                    <mat-list-item>Capacity: {{user.capacity}}</mat-list-item>
+                </ng-template>
+                <mat-list-item>
+                        <button mat-raised-button class="edit" (click)="toggleCalculateForm()">Calculate capacity</button>
+                </mat-list-item>
+                <mat-card *ngIf="calculateFormOpened">
+                      <mat-radio-group aria-label="Select a gender" [(ngModel)]="gender" [formControl]="userGender">
+                          <mat-radio-button value="male">Male</mat-radio-button>
+                          <mat-radio-button value="female">Female</mat-radio-button>
+                      </mat-radio-group><br>
+                      <mat-form-field class="input-width">
+                          <input matInput type="number" min=1 max=1000 placeholder="height, cm" [formControl]="userHeight" #height>
+                          <mat-error *ngIf="userHeight.invalid">{{ getHeightErrorMessage() }}</mat-error>
+                      </mat-form-field>
+                      <mat-form-field class="input-width">
+                          <input matInput type="number" min=1 max=1000 placeholder="weight, kg" [formControl]="userWeight" #weight>
+                          <mat-error *ngIf="userWeight.invalid">{{ getWeightErrorMessage() }}</mat-error>
+                      </mat-form-field><br><br>
+                      <button mat-raised-button class="confirm" (click)="changeCapacity()" [disabled]="capacityDataInvalid()">OK</button>
+                      <button mat-raised-button class="cancel" (click)="toggleCalculateForm()">Cancel</button>
+                </mat-card>
+                <div *ngIf="this.editable;else edit">
+                    <mat-list-item><button mat-raised-button class="react" (click)="submitUserData()" [disabled]=userDataIsIncorrect>Submit changes</button></mat-list-item>
+                </div>
+                <ng-template #edit>
+                    <mat-list-item><button mat-raised-button class="edit" (click)="editUser()">Edit profile</button></mat-list-item>
+                </ng-template>
+                <mat-list-item><button mat-raised-button class="edit" (click)="togglePasswordForm()">Change password</button></mat-list-item>
+                <mat-card *ngIf="passwordFormOpened">
+                    <div style="text-align: center;">
+                        <mat-form-field *ngIf="user.passwordIsSet" style="margin-bottom: 10px;">
+                            <input matInput type="password" placeholder="Old password" [formControl]="oldPassword">
+                            <mat-error *ngIf="oldPassword.invalid">{{ getPasswordErrorMessage(oldPassword) }}</mat-error>
+                        </mat-form-field>
+                        <mat-form-field style="margin-bottom: 10px;">
+                            <input matInput type="password" placeholder="New password" [formControl]="newPassword">
+                            <mat-error *ngIf="newPassword.invalid">{{ getPasswordErrorMessage(newPassword) }}</mat-error>
+                        </mat-form-field>
+                        <mat-form-field style="margin-bottom: 10px;">
+                            <input matInput type="password" placeholder="Repeat new password" [formControl]="confirmPassword">
+                            <mat-error *ngIf="confirmPassword.invalid">{{ getPasswordGroupErrorMessage(confirmPassword) }}</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <button mat-raised-button class="confirm" (click)="updatePassword()" [disabled]="passwordDataInvalid()">OK</button>
+                    <button mat-raised-button class="cancel" (click)="togglePasswordForm()">Cancel</button>
+                </mat-card>
+            </mat-list>
+        </mat-sidenav>
+        <mat-sidenav-content>
+            <router-outlet></router-outlet>
+        </mat-sidenav-content>
+    </mat-sidenav-container>
+</div>

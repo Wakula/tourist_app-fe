@@ -1,0 +1,39 @@
+<div class="trip_detail_container" *ngIf="trip && currentUser"  >
+  <mat-card class = 'card-with-map zero-border'>
+    <mat-card-title>
+<!--        <span>{{this.trip.description}}</span>-->
+    </mat-card-title>
+    <mat-card-content >
+        <mat-expansion-panel>
+            <mat-expansion-panel-header [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+                <mat-panel-title >
+                    <H2 ><mat-icon>explore</mat-icon></H2>
+                    <H2 class = 'panel-text'>
+                        {{this.trip.name}}  {{this.trip.start_date | date }} | {{this.trip.end_date| date }}<br>
+                    </H2>
+                </mat-panel-title>
+                <mat-panel-description>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <div>
+                <app-trip-detail-page-map [trip]="trip"></app-trip-detail-page-map>
+            </div>
+            <div *ngIf="trip.trip_uuid">
+                <mat-label class="panel-text">
+                    <strong>Invite_link:</strong>{{this.feUrl}}/join?trip_uuid={{this.trip.trip_uuid}}
+                    <button mat-icon-button  ngxClipboard [cbContent]="this.feUrl +'/join?trip_uuid='+this.trip.trip_uuid"><mat-icon>file_copy</mat-icon></button>
+                    <button mat-icon-button  (click)="refreshInviteLink(this.trip_id)" [disabled]="!readyToRefresh"><mat-icon>refresh</mat-icon></button>
+                </mat-label>
+            </div>
+
+        </mat-expansion-panel>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="left">
+      <app-trip-item-list [delEvent]="eventsSubject.asObservable()" [trip]="trip"></app-trip-item-list>
+  </div>
+  <div class="right">
+      <app-trip-user-list (roleDeleteEvent)="processRoleDeletion($event)" [trip]="trip" [currentUser]="currentUser"></app-trip-user-list>
+  </div>
+</div>

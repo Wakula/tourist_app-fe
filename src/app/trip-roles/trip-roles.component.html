@@ -1,0 +1,14 @@
+<mat-chip-list aria-label="Tag selection">
+    <p><strong>Tags:</strong></p>
+    <mat-chip *ngFor="let role of tripRoles" 
+        [ngClass]="{activeBorder: activeRole === role.id}"
+        (click)="activateRole(role.id)"
+        [style.background-color]="role.color"
+        (removed)="deleteRoleDialog(role)">
+        {{role.name}}
+        <mat-icon matChipRemove  *ngIf="currentUser.user_id == trip.admin_id">cancel</mat-icon>
+    </mat-chip>
+    <mat-chip *ngIf="currentUser.user_id == trip.admin_id" color="primary" selected (click)="openDialog()">
+        <i class="material-icons">add</i>
+    </mat-chip>
+</mat-chip-list>

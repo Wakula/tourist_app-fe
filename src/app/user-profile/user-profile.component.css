@@ -1,0 +1,145 @@
+.user-profile_container{
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    /*margin: auto;*/
+    /*background-color: crimson;*/
+}
+
+.user-information {
+    padding-top: 6vh;
+    /* margin: 6px; */
+}
+
+.edit {
+    color: white;
+    background-color: #79c1e5;
+    font-size: 1rem;
+    width: 100%;
+}
+
+.react {
+    color: white;
+    background-color: #5090ce;
+    font-size: 1rem;
+    width: 100%;
+}
+
+mat-sidenav-container {
+    height: 100%;
+}
+
+mat-sidenav {
+    padding: 16px;
+    /*background-color: #E1DDDD;*/
+    background-image: url(../../assets/images/prof.jpeg);
+    width: 350px;
+    font-size: 1rem;
+}
+
+
+.mdc-button.mdc-button--unelevated {
+    background-color: #5090ce;
+    padding: 0.1rem 2rem;
+    width: 100%;
+}
+
+.mdc-button.edit_avatar {
+    background-color: #dadada;
+    height: 70px;
+    opacity: 0.5;
+    width: 70px;
+    margin-left: -55px;
+
+}
+
+
+.my-avatar /deep/ .avatar-content {
+    margin-left:  15px!important;
+}
+
+.mat-card-avatar {
+    height: 100%;
+    width: 100px;
+}
+
+mat-list-item.avatar-container {
+    height: 100px;
+}
+
+mat-card {
+    width: 80%;
+    margin-left: 15px;
+}
+.input-width {
+    width: 40%;
+    margin-left: 15px;
+}
+
+.input-edit{
+    width: 287px;
+    margin-left: 15px;
+}
+
+mat-radio-group {
+    margin-left: 15px;
+    margin-right: 40px;
+    display: flex;
+    justify-content: space-between;
+}
+.mat-radio-button ~ .mat-radio-button {
+    margin-left: 15px;
+  }
+mat-card > button.mat-raised-button {
+    margin-left: 15px;
+    color: white;
+}
+.confirm {
+    text-align: center;
+    background-color: #009c75;
+    width: 40%;
+}
+.cancel {
+    text-align: center;
+    background-color: #f66767;
+    width: 40%;
+}
+
+
+p {
+    font-family: Lato;
+}
+
+.image-container {
+    position: relative;
+    display: inline-block;
+    text-align: center;
+}
+
+
+
+.select-profile-picture {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 999;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.message {
+    position: absolute;
+    width: 90%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 100%);
+    transition: all 1s;
+    opacity: 0;
+}
+
+.image-container:hover .message {
+    transform: translate(-50%, -50%);
+    opacity: 1;
+}

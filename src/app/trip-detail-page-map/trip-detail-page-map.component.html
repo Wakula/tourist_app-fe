@@ -1,0 +1,37 @@
+<div id="container">
+    <div id="left1">
+        <h3 align="center">Checkpoints</h3>
+        <mat-nav-list class="list-container">
+            <mat-list-item *ngFor="let marker of location.markers">
+                <h5 mat-line >{{marker.order}}. {{marker.name}} <br/>
+                    lat:  {{marker.lat | number:'2.6-6'}} <br/>
+                    lng: {{marker.lng| number:'2.6-6'}} </h5>
+            </mat-list-item>
+        </mat-nav-list>
+    </div>
+    <div id="right1">
+        <agm-map  style="display: block; width: 100%"
+                  [(latitude)]="location.lat"
+                  [(longitude)]="location.lng"
+                  [(zoom)]="location.zoom"
+                  [zoomControl]="true" >
+            <agm-marker *ngFor="let marker of location.markers"
+                        [(latitude)]="marker.lat"
+                        [(longitude)]="marker.lng"
+                        [iconUrl]="  {
+                url: './assets/images/tent.svg',
+                scaledSize: {
+                    width: 40,
+                    height: 40 }
+                    }"
+            >
+                   <agm-polyline [editable]="false"  [strokeColor]="'green'">
+                    <agm-polyline-point *ngFor="let data of  location.markers"
+                                        [latitude]="data.lat"
+                                        [longitude]="data.lng">
+                    </agm-polyline-point>
+                </agm-polyline>
+            </agm-marker>
+        </agm-map>
+    </div>
+</div>

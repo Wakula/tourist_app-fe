@@ -1,0 +1,22 @@
+<h1 mat-dialog-title align="center">Sign In</h1>
+<div mat-dialog-content class="form-container">
+  <mat-form-field>
+    <input placeholder="Email" matInput [formControl]="email" [(ngModel)]="data.email" required>
+    <mat-error *ngIf="email.invalid">{{ getEmailErrorMessage() }}</mat-error>
+  </mat-form-field><br>
+  <mat-form-field>
+    <input placeholder="Password" [formControl]="password" matInput [(ngModel)]="data.password" [type]="passwordHide ? 'password' : 'text'" required>
+    <mat-error *ngIf="password.invalid">{{ getPasswordErrorMessage() }}</mat-error>
+    <button mat-icon-button matSuffix (click)="passwordHide = !passwordHide" [attr.aria-label]="'passwordHide password'" [attr.aria-pressed]="passwordHide">
+      <mat-icon>{{passwordHide ? 'visibility_off' : 'visibility'}}</mat-icon>
+    </button>
+  </mat-form-field>
+</div>
+<mat-dialog-actions align="center">
+  <button type="submit" mat-raised-button class="register" (click)="logInUser()" [disabled]="dataInvalid()" >Login</button>
+  <button mat-raised-button class="cancel" mat-dialog-close>Cancel</button><br/>
+</mat-dialog-actions>
+
+<div align="center">
+  <button mat-raised-button class="google" mat-dialog-close (click)="logInUser('google')">Google</button>
+</div>

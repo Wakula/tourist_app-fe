@@ -1,0 +1,17 @@
+<div [formGroup]="roleForm">
+<div mat-dialog-content>
+    <mat-form-field>
+        <input matInput placeholder="Enter tag name" formControlName="name" required>
+    </mat-form-field>  
+    <br>
+    <p style="margin:4px;margin-top:-5px">Choose tag color</p>
+    <input formControlName="color" type="hidden" required>
+
+    <color-sketch color="#fff" disableAlpha="true" presetColors="[]" (onChangeComplete)="handleChange($event)"></color-sketch>
+</div>
+<div mat-dialog-actions>
+    <button type="submit" mat-button [mat-dialog-close]="roleForm.value" [disabled]="!roleForm.valid">Submit</button>
+    <button mat-button (click)="onNoClick()">Cancel</button>
+</div>
+</div>
+           
